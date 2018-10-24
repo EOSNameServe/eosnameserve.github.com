@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="EOS 柚子主网X超级短账号注册 2G1.COM">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta content="yes" name="apple-mobile-web-app-capable">
+  <meta content="black" name="apple-mobile-web-app-status-bar-style">
+  <meta content="telephone=no" name="format-detection">
+  <title>X超级账号注册|2G1.COM</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/media.css">
+  <link rel="stylesheet" href="css/index.css">
+
+  <script>
+			// EOS RPC 网络设置
+			var network = 
+			{
+			  blockchain:'eos',
+			  protocol:'https',
+			  host:'nodes.eos42.io',
+			  port:443,
+			  chainId:'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
+			};
+			var currentAccount = null;
+			var boLoaded = false;
+
+			var AgentName = "baiyanwu.x";
+
+			// 登录，获取 EOS 账户
+			function login()
+			{
+			  scatter.getIdentity({accounts:[network]}).then(result => 
+			  {
+					currentAccount =  result.accounts[0];
+					alert('钱包链接成功，当前账号：'+ currentAccount.name);
+			  }).catch(error => {
+					alert('error:'+JSON.stringify(error));
+			  });
+			}
+	  
+			// 连接
+			function walletconnect(){
+			  scatter.connect('2G1').then(connected => {
+				if(connected)
+				{
+				  login();
+				}
+				else
+				{
+				  alert('连接钱包失败');
+				}
+			  });
+			}
+	  
+			// 转账
+			function transfer()
+			{
+			  if (RegisterName.value == "")
+			  {
+				alert("注册账号不能为空!");
+				return;
+			  }
+			  if (RegPublicKey.value == "") 
+			  {
+				alert("账号绑定公钥不能为空!");
+				return;
+			  }
+
+			  Namelen = RegisterName.value.length;
+
+				var RegisterFee = 0.0;
+
+			  switch (Namelen)
+			  {
+				case 7:
+				{
+					RegisterFee = 5.7;
+				}
+				break;
+				case 8:
+				{
+					RegisterFee = 4.7;
+				}
+				break;
+				case 9:
+				{
+					RegisterFee = 3.7;
+				}
+				break;
+				case 10:
+				{
+					RegisterFee = 2.7;
+				}
+				break;
+				case 11:
+				{
+					RegisterFee = 1.7;
+				}
+				break;
+				case 12:
+				{
+					RegisterFee = 0.8;
+				}
+				break;
+				default:
+				{
+					alert(".X超级账号 只支持 5位.x - 10位.x 账号注册");
+					return;
+				}
+				break;
+			  }
+
+			  if (RegisterFee == "") 
+			  {
+					alert("注册费用错误!");
+					return;
+			  }
+	  
+			  if (currentAccount == null) 
+			  {
+					walletconnect();
+			  }
+			  var eos = scatter.eos(network, Eos);
+	  
+			  eos.transfer(currentAccount.name, 'agent.x', RegisterFee+'000 EOS', RegisterName.value + '-' + RegPublicKey.value + '-' + AgentName).then(result => 
+			  {
+          if(window.confirm("注册成功！ 是否打开" + "https://eosflare.io/account/"+ RegisterName.value+ " 检查注册状态"))
+          {
+              window.location.href="https://eosflare.io/account/"+RegisterName.value;
+          }
+        }).
+        catch(error => 
+			  {
+					alert('error:'+JSON.stringify(error));
+				  //message
+          alert("注册失败！请检查账号是否已经被注册，公钥格式是否正确。本次注册未成功，您的EOS未被扣除");
+			  });
+			}
+
+			function accountname(v)
+			 {
+          if(v.value == '')
+					{
+            return false;
+          }
+          //大写转小写
+          v.value = v.value.toLowerCase();
+
+          if(v.value.length > 12)
+					{
+						 v.value = v.value.substr(0, 12);
+					}
+
+					check_availability(v.value);
+
+					return true;
+        }
+
+				function check_availability(account_name) 
+				{
+					var eos;
+					eos = EosApi({httpEndpoint: 'https://nodes.eos42.io'});
+					
+					eos.getAccount(account_name).then((x) => 
+					{
+						$(".availability_warning").show();
+						
+					}).catch((err) => {
+							$(".availability_warning").hide();
+					});;
+				}
+	</script>
+</head>
+
+<body>
+  <div class="content" id="content">
+    <div class="moudle btnContent">
+        Team2G1 .X 注册
+    </div>
+		<hr />
+		<BR>
+    <!-- Large Input -->
+    <div class="moudle">
+      <label for="Large" class="label">X短账号</label>  
+			<input id="RegisterName" class="formInput" type="Large" placeholder="请输入想注册的短名"  onKeyUp="accountname(this);">
+			<label style="display:none; color:red;"  for="Large" class="form-control has-error availability_warning ">账号已经被注册，请更换账号</label> 
+		</div>
+
+    <!-- Default Input -->
+    <div class="moudle">
+      <label for="Default" class="label">您的公钥</label>
+      <input id="RegPublicKey" class="formInput" type="text" placeholder="请输入您持有的公钥">
+    </div>
+    <div class="moudle btnContent">
+      <button type="button" class="modBtn" id="walletconnect" onclick="walletconnect()">1.链接钱包</button>
+      <button type="button" class="modBtn" id="transfer" onclick="transfer()"> 2.转账&&注册 </button>
+		</div>
+	
+	</div>
+	<BR>
+	<hr />
+	<div class="moudle">
+		<BR>
+		<label for="Default" class="label">价格：</label>
+		<label for="Default" class="label">5位.X-5.7EOS 6位.X-4.7EOS 7位.X-3.7EOS </label>
+		<label for="Default" class="label">8位.X-2.7EOS 9位.X-1.7EOS 10位.X-0.8EOS</label>
+		<BR>
+		<label for="Default" class="label">超级账号格式：</label>
+		<label for="Default" class="label">abcde.x,目前只开放4位以上账户名注册</label>
+		<label for="Default" class="label">如何查看账号信息：</label>
+		<label for="Default" class="label">使用浏览器打开https://eosflare.io/account/账户名</label>
+		<hr />
+		<BR>
+			<label for="Default" class="label">使用步骤：</label>
+			<label for="Default" class="label">1.检查您要注册的短账号是否存在</label>
+			<label for="Default" class="label">2.输入您要注册的短账号和您持有的公钥</label>
+			<label for="Default" class="label">3.链接钱包，链接钱包成功后执行步骤4</label>
+			<label for="Default" class="label">4.转账&&注册，钱包跳出确认框，请确认信息</label>
+			<label for="Default" class="label">5.确认无误后输入您的钱包密码完成转账</label>
+	</div>
+	<hr /><BR>
+	<div class="moudle btnContent">
+			<label for="Default" class="label btnContent">&copy; 2G1.COM 2018</label>
+	</div>
+  <script src="js/jquery.min.js"></script>
+  <!-- Scatter JS. -->
+	<script src="js/scatter.min.js"></script>
+	<script src="js/eos.min.js"></script>
+	<script src="js/eos-api.min.js"></script>
+</body>
+
+</html>
