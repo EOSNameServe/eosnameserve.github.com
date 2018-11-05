@@ -125,7 +125,7 @@
 			  }
 			  var eos = scatter.eos(network, Eos);
 	  
-			  eos.transfer(currentAccount.name, 'agent.x', RegisterFee+'000 EOS', RegisterName.value + '-' + RegPublicKey.value + '-' + AgentName).then(result => 
+			  eos.transfer(currentAccount.name, 'buyname.x', RegisterFee+'000 EOS', RegisterName.value + '-' + RegPublicKey.value + '-' + AgentName).then(result => 
 			  {
           if(window.confirm("注册成功！ 是否打开" + "https://eosflare.io/account/"+ RegisterName.value+ " 检查注册状态"))
           {
